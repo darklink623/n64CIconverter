@@ -1,0 +1,10 @@
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.exe.config
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.exe
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.pdb
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csprojResolveAssemblyReference.cache
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.Form1.resources
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.Properties.Resources.resources
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csproj.GenerateResource.Cache
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csproj.CoreCompileInputs.cache
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.exe
+C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.pdb
