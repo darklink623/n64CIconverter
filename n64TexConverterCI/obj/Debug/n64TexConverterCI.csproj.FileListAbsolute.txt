@@ -8,3 +8,13 @@ C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64Tex
 C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csproj.CoreCompileInputs.cache
 C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.exe
 C:\Users\nbarb\source\repos\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.pdb
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.exe.config
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.exe
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\bin\Debug\n64TexConverterCI.pdb
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csprojAssemblyReference.cache
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.Form1.resources
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.Properties.Resources.resources
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csproj.GenerateResource.cache
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.csproj.CoreCompileInputs.cache
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.exe
+D:\nbarb\Documents\Visual Studio Projects\n64TexConverterCI\n64TexConverterCI\obj\Debug\n64TexConverterCI.pdb

@@ -15,24 +15,35 @@ namespace n64TexConverterCI
         String fileName;
         String directory;
 
+        int imageX;
+        int imageY;
+
         private void convertToCI()
         {
             uint[] colors;
-            uint pixelImg;
+            uint[] pixelImg = new uint[1];
 
             if (filePathTxt.Text != null)
             {
                 // defines
                 Bitmap image = new Bitmap(filePathTxt.Text);
-                int imageX = image.Width;
-                int imageY = image.Height;
-                pixelImg = new uint();
+                if (Convert.ToInt16(paletteSizeCmb.Text) == 16)
+                {
+                    pixelImg = null;
+                    pixelImg = new uint[2];
+                }
+                else if (Convert.ToInt16(paletteSizeCmb.Text) == 256)
+                {
+                    pixelImg = null;
+                    pixelImg = new uint[1];
+                }
+                
                 
                 StreamWriter imageOutput = new StreamWriter(directory + fileName + ".h");
                 colors = new uint[Convert.ToInt16(paletteSizeCmb.Text)];
-                String pixelHex;
+                String pixelHex = "";
 
-                imageOutput.WriteLine("/*\n * this image was converted using the CI converter\n * this image is {0} pixels wide by {1} pixels tall\n */", imageX, imageY);
+                imageOutput.WriteLine("/*\n * this image was converted using the CI converter\n * this image is {0} pixels wide by {1} pixels tall, and has a bit depth of {2} bits\n */", imageX, imageY, Math.Sqrt(Convert.ToInt16(paletteSizeCmb.Text)));
                 imageOutput.Write("unsigned char " + fileName.Replace(" ", String.Empty) + "[] = {\n");
 
                 uint r, g, b, a;
@@ -44,48 +55,77 @@ namespace n64TexConverterCI
                     for (int i = 0; i < imageX; i++)
                     {
                         // getting raw data
-                        pixelImg = (uint)image.GetPixel(i, j).ToArgb();
-
-                        // compare with colors array
-                        for (int k = 0; k < colors.Length; k++)
+                        for (int arrayposition = 0; arrayposition < pixelImg.Length; arrayposition++)
                         {
-                            if (colors[k] == 0)
+                            // TODO fix this, it crashes on odd numbers-------------------------------------------------------------------------------------------------!!!!!
+                            try
                             {
-                                // add color to array
-                                colors[k] = pixelImg;
-                                pixelImg = (uint)k;
-
-                                // break loop
-                                k = colors.Length;   
+                                pixelImg[arrayposition] = (uint)image.GetPixel(i+arrayposition, j).ToArgb();
                             }
-                            else
+                            catch (ArgumentOutOfRangeException)
                             {
-                                // compare colors
-                                if (pixelImg.Equals(colors[k])) 
+                                if (j < imageY - 1)
                                 {
-                                    pixelImg = (uint)k;
+                                    pixelImg[arrayposition] = (uint)image.GetPixel(0, j+arrayposition).ToArgb();
+                                }
+                                else 
+                                {
+                                    pixelImg[arrayposition] = (uint)0;
+                                }
+                            }
+                            
+                            // compare with colors array
+                            for (int k = 0; k < colors.Length; k++)
+                            {
+                                if (colors[k] == 0)
+                                {
+                                    // add color to array
+                                    colors[k] = pixelImg[arrayposition];
+                                    pixelImg[arrayposition] = (uint)k;
+
+                                    // break loop
                                     k = colors.Length;
+                                }
+                                else
+                                {
+                                    // compare colors
+                                    if (pixelImg[arrayposition].Equals(colors[k]))
+                                    {
+                                        pixelImg[arrayposition] = (uint)k;
+                                        k = colors.Length;
+                                    }
                                 }
                             }
                         }
 
                         // convert to hex
-                        pixelHex = String.Format("0x{0:X}", pixelImg);
+                        if (Convert.ToInt16(paletteSizeCmb.Text).Equals(256))
+                        {
+                            pixelHex = String.Format("\t0x{0:X2}", pixelImg[0]);
+                        }
+
+                        else if (Convert.ToInt16(paletteSizeCmb.Text).Equals(16))
+                        {
+                            // ?? TODO check this
+                            byte tempByte = Convert.ToByte(pixelImg[0] << 4);
+                            i++;
+                            tempByte += Convert.ToByte(pixelImg[1]);
+                            pixelHex = String.Format("\t0x{0:X}", tempByte);
+                        }
+
                         if (i != imageX - 1 || j != imageY - 1)
                         {
                             pixelHex = pixelHex + ", ";
                         }
-                        //TODO re enable
-                        //metadataLbl.Text = pixelHex;
+                        metadataLbl.Text = pixelHex;
 
                         // write to file
                         imageOutput.Write(pixelHex);
                     }
                     // new line
-                    imageOutput.WriteLine("");
+                    imageOutput.WriteLine();
                 }
-                pixelHex = null;
-                //metadataLbl.Text = pixelHex;
+                pixelHex = "0";
                 imageOutput.WriteLine("};");
 
                 // print color palette
@@ -98,37 +138,26 @@ namespace n64TexConverterCI
                     b = colors[i];
                     a = colors[i];
 
-                    // bitshift
-                    r = r << 8 >> 27 << 11;
-                    g = g << 16 >> 27 << 6;
-                    b = b << 24 >> 27 << 1;
-                    a = a >> 31;
-
-                    //String test = ("0x{0:X}", r);
-
-                    //metadataLbl.Text = ("0x{0:X}", r);
-
-                    colors[i] = r+b+g+a;
+                    colors[i] = compressPixel(r, g, b, a, 16);
 
                     imageOutput.Write("\t0x{0:X}", colors[i]);
+
                     // feels like this could be optimized, its messy
                     if (i < colors.Length - 1)
                     {
                         imageOutput.WriteLine(",");
-
                     }
                     else
                     {
                         imageOutput.WriteLine();
                     }
-                    //metadataLbl.Text = ("0x{0:X}", colors[i]);
                 }
                 imageOutput.WriteLine("};");
 
                 // REMEMBER TO CLOSE THE FILE IDIOT
                 imageOutput.Close();
             }
-            pixelImg = 0;
+            pixelImg = null;
             colors = null;
         }
 
@@ -141,6 +170,11 @@ namespace n64TexConverterCI
                 // display image, show url in textbar
                 directory = Path.GetDirectoryName(textureDialog.FileName) + "\\";
                 fileName = Path.GetFileNameWithoutExtension(textureDialog.FileName);
+
+                Bitmap image = new Bitmap(textureDialog.FileName);
+                imageX = image.Width;
+                imageY = image.Height;
+                metadataLbl.Text = (imageX + ", " + imageY);
 
                 // removes space
                 fileName.Replace(" ", String.Empty);
@@ -165,6 +199,50 @@ namespace n64TexConverterCI
         {
             // close application, this should be obvious
             Close();
+        }
+
+        private uint compressPixel(uint r, uint g, uint b, uint a, int size)
+        {
+            uint pixel = 0;
+            switch (size)
+            {
+                case 32:
+                    // bitshift to 32 bits
+                    r = r >> 16 << 24;
+                    g = g >> 8 << 16;
+                    b = b << 8;
+                    a = a >> 24;
+                    break;
+
+                case 16:
+                    // bitshift to 16 bits
+                    r = r << 8 >> 27 << 11;
+                    g = g << 16 >> 27 << 6;
+                    b = b << 24 >> 27 << 1;
+                    a = a >> 31;
+                    break;
+
+                case 8:
+                    // bitshift to 8 bits
+                    r = r;
+                    g = g;
+                    b = b;
+                    a = a;
+                    break;
+
+                case 4:
+                    // bitshift to 4 bits
+                    r = r;
+                    g = g;
+                    b = b;
+                    a = a;
+                    break;
+
+                default:
+                    break;
+            }
+            pixel = r + b + g + a;
+            return pixel;
         }
     }
 }
